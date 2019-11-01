@@ -64,7 +64,7 @@ function Find-ListItem {
     } catch {
         Throw $_.Exception.Message
     }
-    Write-Verbose "FINISH: Locating $($SearchString) in List"
+    Write-Verbose "FINISH: Locating $($SearchString) in List."
     return $Item
 
 }
