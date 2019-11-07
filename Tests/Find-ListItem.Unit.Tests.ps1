@@ -67,8 +67,12 @@ Describe Find-ListItem {
         # Execute
         $SlowSearch = Measure-Command { $Item = Find-ListItem -Verbose -List $List -SearchString "abcd" -ForceSlowSearch $true }
         $FastSearch = Measure-Command { $Item = Find-ListItem -Verbose -List $List -SearchString "abcd" }
+        $WhereMethod = Measure-Command { $WhereItem = $List.where( { $_ -eq "abcd" }) }
         It "FastSearch Should be Faster than SlowSearch" {
             $FastSearch.Ticks | Should -BeLessThan $SlowSearch.Ticks
+        }
+        It "FastSearch($($Fastsearch.TotalMilliseconds)ms) Should be Faster than Where Method ($($WhereMethod.TotalMilliseconds)ms)" {
+            $FastSearch.Ticks | Should -BeLessThan $WhereMethod.Ticks
         }
     }
 
@@ -87,8 +91,12 @@ Describe Find-ListItem {
         # Execute
         $SlowSearch = Measure-Command { $SlowItem = Find-ListItem -Verbose -List $List -SearchString "$($List[45000])" -ForceSlowSearch $true }
         $FastSearch = Measure-Command { $FastItem = Find-ListItem -Verbose -List $List -SearchString "$($List[45000])" }
-        It "FastSearch Should be Faster than SlowSearch" {
+        $WhereMethod = Measure-Command { $WhereItem = $List.where( { $_ -eq "$($List[45000])" }) }
+        It "FastSearch($($Fastsearch.TotalMilliseconds)ms) Should be Faster than SlowSearch($($SlowSearch.TotalMilliseconds)ms)" {
             $FastSearch.Ticks | Should -BeLessThan $SlowSearch.Ticks
+        }
+        It "FastSearch($($Fastsearch.TotalMilliseconds)ms) Should be Faster than Where Method ($($WhereMethod.TotalMilliseconds)ms)" {
+            $FastSearch.Ticks | Should -BeLessThan $WhereMethod.Ticks
         }
         It "FastSearch Result Should be $($List[45000])" {
             $FastItem | Should -BeExactly "$($List[45000])"
