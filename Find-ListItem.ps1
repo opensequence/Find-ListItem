@@ -25,11 +25,11 @@ function Find-ListItem {
             #select the existing object
             if ([string]::IsNullOrEmpty($SearchField)) {
                 if (($List).contains($SearchString)) {
-                    [object]$Item = $List.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    [object]$Item = $List.Where( { $_ -eq $SearchString }) | Select-Object -First 1
                 }
             } else {
                 if (($List.$SearchField).contains($SearchString)) {
-                    [object]$Item = $List.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    [object]$Item = $List.Where( { $_.$SearchField -eq $SearchString }) | Select-Object -First 1
                 }
             }
         } elseif ($List.Count -ge 3000) {
@@ -41,30 +41,38 @@ function Find-ListItem {
             [System.Collections.Generic.List[object]]$FourthSection = $List[$($Quarters * 3)..$($Count - 1)]
             if ([string]::IsNullOrEmpty($SearchField)) {
                 if (($FirstSection).contains($SearchString)) {
-                    [object]$Item = $FirstSection.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    #[object]$Item = $FirstSection.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    [object]$Item = $FirstSection.Where( { $_ -eq $SearchString }) | Select-Object -First 1
                 } elseif (($FourthSection).contains($SearchString)) {
-                    [object]$Item = $FourthSection.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    #[object]$Item = $FourthSection.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    [object]$Item = $FourthSection.Where( { $_ -eq $SearchString }) | Select-Object -First 1
                 } elseif (($SecondSection).contains($SearchString)) {
-                    [object]$Item = $SecondSection.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    #[object]$Item = $SecondSection.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    [object]$Item = $SecondSection.Where( { $_ -eq $SearchString }) | Select-Object -First 1
                 } elseif (($ThirdSection).contains($SearchString)) {
-                    [object]$Item = $ThirdSection.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    #[object]$Item = $ThirdSection.Find([Predicate[object]] { $args[0] -eq $SearchString })
+                    [object]$Item = $ThirdSection.Where( { $_ -eq $SearchString }) | Select-Object -First 1
                 }
             } else {
                 if (($FirstSection.$SearchField).contains($SearchString)) {
-                    [object]$Item = $FirstSection.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    #[object]$Item = $FirstSection.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    [object]$Item = $FirstSection.Where( { $_.$SearchField -eq $SearchString }) | Select-Object -First 1
                 } elseif (($FourthSection).contains($SearchString)) {
-                    [object]$Item = $FourthSection.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    #[object]$Item = $FourthSection.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    [object]$Item = $FourthSection.Where( { $_.$SearchField -eq $SearchString }) | Select-Object -First 1
                 } elseif (($SecondSection).contains($SearchString)) {
-                    [object]$Item = $SecondSection.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    #[object]$Item = $SecondSection.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    [object]$Item = $SecondSection.Where( { $_.$SearchField -eq $SearchString }) | Select-Object -First 1
                 } elseif (($ThirdSection).contains($SearchString)) {
-                    [object]$Item = $ThirdSection.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    #[object]$Item = $ThirdSection.Find([Predicate[object]] { $args[0].$SearchField -eq $SearchString })
+                    [object]$Item = $ThirdSection.Where( { $_.$SearchField -eq $SearchString }) | Select-Object -First 1
                 }
             }
         }
     } catch {
         Throw $_.Exception.Message
     }
-    Write-Verbose "FINISH: Locating $($SearchString) in List"
+    Write-Verbose "FINISH: Locating $($SearchString) in List."
     return $Item
 
 }
