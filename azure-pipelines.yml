@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- development
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+      Install-Module -Name Pester -Force -Verbose -Scope CurrentUser -SkipPublisherCheck -Confirm:$false
+      
+      Invoke-Pester -Script ".\Tests\Find-ListItem.Unit.Tests.ps1" -CodeCoverage "Find-ListItem.ps1" -OutputFile "$($ENV:System_DefaultWorkingDirectory)\PesterResults.xml" -CodeCoverageOutputFile "$($ENV:System_DefaultWorkingDirectory)\CodeCoverage.xml" -EnableExit
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'NUnit'
+    testResultsFiles: '*PesterResults.xml'
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'JaCoCo'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)\\CodeCoverage.xml'
